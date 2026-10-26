@@ -127,17 +127,16 @@ void onThisDayCallbackDispatcher() async {
     if (hasOnThisDayEntries) {
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
           FlutterLocalNotificationsPlugin();
-      await flutterLocalNotificationsPlugin.initialize(
-          settings: const InitializationSettings(
-              android:
-                  AndroidInitializationSettings('@drawable/ic_notification'),
-              linux: LinuxInitializationSettings(
-                  defaultActionName: 'On This Day')));
-
-      // Localized notification text is stored in SharedPreferences upon startup
+      // Localized notification text is stored in SharedPreferences upon startup.
       var prefs = await SharedPreferences.getInstance();
       var title = prefs.getString('onThisDayNotificationTitle');
       var description = prefs.getString('onThisDayNotificationDescription');
+      await flutterLocalNotificationsPlugin.initialize(
+          settings: InitializationSettings(
+              android:
+                  AndroidInitializationSettings('@drawable/ic_notification'),
+              linux: LinuxInitializationSettings(
+                  defaultActionName: title ?? 'On This Day')));
 
       var androidDetails = AndroidNotificationDetails(
         'daily_you_on_this_day',
@@ -175,22 +174,22 @@ void callbackDispatcher() async {
         ConfigProvider.instance.get(Settings.alwaysRemind)) {
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
           FlutterLocalNotificationsPlugin();
-
-      await flutterLocalNotificationsPlugin.initialize(
-          settings: const InitializationSettings(
-              android:
-                  AndroidInitializationSettings('@drawable/ic_notification'),
-              linux:
-                  LinuxInitializationSettings(defaultActionName: 'Log Today')));
-
-      // Localized notification text is stored in SharedPreferences upon startup
+      // Localized notification text is stored in SharedPreferences upon startup.
       var prefs = await SharedPreferences.getInstance();
       var title = prefs.getString('dailyReminderTitle');
       var description = prefs.getString('dailyReminderDescription');
 
+      await flutterLocalNotificationsPlugin.initialize(
+          settings: InitializationSettings(
+              android:
+                  AndroidInitializationSettings('@drawable/ic_notification'),
+              linux:
+                  LinuxInitializationSettings(
+                      defaultActionName: title ?? 'Log Today!')));
+
       var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'daily_you_reminder',
-        title ?? "Log Today!",
+        title ?? 'Log Today!',
         icon: '@drawable/ic_notification',
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,

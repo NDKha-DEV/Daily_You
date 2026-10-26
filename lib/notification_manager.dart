@@ -46,15 +46,18 @@ class NotificationManager {
   NotificationManager._internal();
 
   Future<void> init() async {
+    final prefs = await SharedPreferences.getInstance();
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
     _notifications = flutterLocalNotificationsPlugin;
 
     await _notifications!.initialize(
-        settings: const InitializationSettings(
+        settings: InitializationSettings(
             android: AndroidInitializationSettings('@drawable/ic_notification'),
-            linux: LinuxInitializationSettings(defaultActionName: 'Log Today')),
+            linux: LinuxInitializationSettings(
+                defaultActionName:
+                    prefs.getString('dailyReminderTitle') ?? 'Log Today!')),
         onDidReceiveNotificationResponse: backupCancelBackgroundHandler,
         onDidReceiveBackgroundNotificationResponse:
             backupCancelBackgroundHandler);
